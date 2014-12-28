@@ -1,0 +1,81 @@
+<html encoding="utf8">
+  <head>
+    <style>
+    body{
+      margin-left:20%;
+      margin-right:20%;
+    }
+       td
+       {
+         width: 100px;
+         height: 100px;
+         border: black 1px solid;
+         text-align: center;
+         font-size: 20px;
+         font-weight:bold;
+         font-family: verdana,tahoma,arial;
+       }
+    </style>
+  </head>
+  <body>
+    <h1>2048</h1>
+    Join the tiles by using the arrow keys. <a href="#" id="newgame">New game</a>
+    <div style="float:right">Score: <span id="score">0</span></div>
+    <table>
+      <tr>
+        <td id="0"></td>
+        <td id="1"></td>
+        <td id="2"></td>
+        <td id="3"></td>
+      </tr>
+      <tr>
+        <td id="4"></td>
+        <td id="5"></td>
+        <td id="6"></td>
+        <td id="7"></td>
+      </tr>
+      <tr>
+        <td id="8"></td>
+        <td id="9"></td>
+        <td id="10"></td>
+        <td id="11"></td>
+      </tr>
+      <tr>
+        <td id="12"></td>
+        <td id="13"></td>
+        <td id="14"></td>
+        <td id="15"></td>
+      </tr>
+    </table>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="2048.js"></script>
+    <script>
+    function render(g) {
+      for(var i = 0; i < 16; i++) {
+        var number = g.get(i);
+        $("#" + i).text(number > 0 ? number : "");
+        $("#score").text(g.score());
+      }
+    }
+
+    var game = Game.create();
+    render(game);
+    $(function(){
+      $(window).on("keydown", function(evt){
+        if (evt.keyCode == 37) game.left();
+        else if (evt.keyCode == 38) game.up();
+        else if (evt.keyCode == 39) game.right();
+        else if (evt.keyCode == 40) game.down();
+        else return;
+        render(game);
+        if (game.isGameOver()) alert("Game over!");
+      });
+
+      $("#newgame").click(function(){
+        game = Game.create();
+        render(game);
+      })
+    });
+    </script>
+  </body>
+</html>
