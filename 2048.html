@@ -4,12 +4,14 @@
     body{
       margin-left:20%;
       margin-right:20%;
+      background-color: #22222F;
+      color:#cccccc;
     }
        td
        {
          width: 100px;
          height: 100px;
-         border: black 1px solid;
+         border: white 1px solid;
          text-align: center;
          font-size: 20px;
          font-weight:bold;
@@ -19,9 +21,10 @@
   </head>
   <body>
     <h1>2048</h1>
-    Join the tiles by using the arrow keys. <a href="#" id="newgame">New game</a>
-    <div style="float:right">Score: <span id="score">0</span></div>
-    <table>
+    Join the tiles by using the arrow keys.<br/>
+    [<a href="#" id="newgame">New game</a>] | [<a href="#" id="aiplay">AI Play</a>]
+    <h2 style="float:right">Score: <span id="score">0</span></h2>
+    <table style="margin-top:30px">
       <tr>
         <td id="0"></td>
         <td id="1"></td>
@@ -49,7 +52,43 @@
     </table>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="2048.js"></script>
+    <script type="text/javascript" src="GameTree.js"></script>
     <script>
+    var game;
+
+    function newgame() {
+      game = Game.create();
+      game.set_renderer(render);
+      game.onwait = function(){
+        var timer_id;
+        timer_id = window.setTimeout(function(){
+          game.next();
+        }, 200);
+      }
+      game.start();
+    }
+
+    var gameTree;
+    function aiplay(){
+      gameTree = GameTree.create(Game.emptySquares, Game.moves);
+      game.onwait = function(){}
+      aitick(gameTree);
+    }
+
+    var depth = 6; //adjust in console
+
+    function aitick(){
+      if(!game.isGameOver()) {
+        var suggestion = gameTree.search(game,depth);
+        if (suggestion.move == 'left')  game.left();
+        if (suggestion.move == 'right') game.right();
+        if (suggestion.move == 'up')    game.up();
+        if (suggestion.move == 'down')  game.down();
+        game.next();
+        window.setTimeout('aitick()', 90);
+      }
+    }
+
     function render(g) {
       for(var i = 0; i < 16; i++) {
         var number = g.get(i);
@@ -58,8 +97,6 @@
       }
     }
 
-    var game = Game.create();
-    render(game);
     $(function(){
       $(window).on("keydown", function(evt){
         if (evt.keyCode == 37) game.left();
@@ -67,14 +104,17 @@
         else if (evt.keyCode == 39) game.right();
         else if (evt.keyCode == 40) game.down();
         else return;
-        render(game);
         if (game.isGameOver()) alert("Game over!");
       });
 
       $("#newgame").click(function(){
-        game = Game.create();
-        render(game);
+        newgame();
+      });
+
+      $("#aiplay").click(function(){
+        aiplay();
       })
+      newgame();
     });
     </script>
   </body>
