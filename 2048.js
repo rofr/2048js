@@ -61,12 +61,12 @@ Game.create = function(b,s,w){
       renderer(this);
     },
 
-    pack:function(arr)
+    pack:function(indices)
     {
       //make a copy, skipping zeros
       var numbers = [];
       for(var i=0;i<4;i++){
-        var number = board[arr[i]];
+        var number = board[indices[i]];
         if (number > 0) numbers.push(number);
       }
 
@@ -84,7 +84,7 @@ Game.create = function(b,s,w){
       //right pad with zeros back to length 4
       while(numbers.length < 4) numbers.push(0);
       for(var i=0; i < 4;i++) {
-        board[arr[i]] = numbers[i];
+        board[indices[i]] = numbers[i];
       }
     },
 
@@ -103,9 +103,10 @@ Game.create = function(b,s,w){
 
     equals : function(that)
     {
+      var that_board = that.get();
       for(var i = 0; i < board.length; i++)
         {
-          if (this.get(i) != that.get(i)) return false;
+          if (board[i] != that_board[i]) return false;
         }
         return true;
     },
@@ -149,8 +150,10 @@ Game.create = function(b,s,w){
       renderer(this);
       return this;
     },
-    clone_ : function() {
-      return Game.create(JSON.parse(JSON.stringify(board)), score);
+    clone : function(){
+      var newboard = new Array(16);
+      for(var i = 0; i <16; i++) newboard[i] = board[i];
+      return Game.create(newboard, score, wait_for_next);
     },
     start: function() {
         this.put_rand();
