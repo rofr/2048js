@@ -5,6 +5,8 @@ http://rofr.github.io/2048js
 
 This is an evening project I did with my children just for fun. The focus was on game representation and play so sorry about the lacking UI. Swipe is not supported so you need to use the arrow keys on the keyboard. It works on my machine using Chrome.
 
+Contact? http://twitter.com/robertfriberg
+
 ## AI
 The AI is based on the minimax algorithm, where the random tile placed between your moves counts as the opponent.
 
